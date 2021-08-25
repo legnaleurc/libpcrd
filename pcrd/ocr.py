@@ -12,7 +12,7 @@ METHOD = cv2.TM_CCOEFF_NORMED
 
 
 def load_input():
-    path_list = os.listdir('./input')
+    path_list = os.listdir('input')
     return [cv2.imread('./input/' + path) for path in path_list]
 
 
@@ -46,11 +46,16 @@ def get_item_count(source, item):
     upper = numpy.array([255, 255, 125], dtype=numpy.uint8)
     mask = cv2.inRange(display, lower, upper)
     mask = ~mask
+    y, x, _ = display.shape
+    arr = [mask[:, x - 19 * (i + 1):x - 19 * i] for i in range(4)]
 
-    config = '--oem 3 --psm 6 outputbase digits'
-    rv = pytesseract.image_to_string(mask, lang='eng', config=config)
-    rv = re.sub('\D', '', rv)
-    if not rv:
-        return 0
-    rv = int(rv, 10)
-    return rv
+    total = 0
+    for idx, i in enumerate(arr):
+        config = '--oem 3 --psm 10 outputbase digits'
+        rv = pytesseract.image_to_string(i, lang='eng', config=config)
+        rv = re.sub('\D', '', rv)
+        if not rv:
+            break
+        rv = int(rv, 10)
+        total += rv * 10 ** idx
+    return total
