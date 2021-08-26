@@ -24,7 +24,7 @@ def main(args: list[str] = None) -> int:
                 break
     script = generate_script(item_dict)
 
-    with open('./output.js', 'w') as fout:
+    with open(kwargs.output_file, 'w') as fout:
         fout.write(script)
 
     return 0
@@ -34,6 +34,7 @@ def parse_args(args: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser('pcrd')
 
     parser.add_argument('input_folder', type=str, default='./input')
+    parser.add_argument('output_file', type=str, default='./output.js')
 
     kwargs = parser.parse_args(args)
     return kwargs
