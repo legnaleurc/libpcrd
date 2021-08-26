@@ -1,4 +1,5 @@
 import argparse
+import concurrent.futures
 import sys
 
 from .ocr import load_digits, load_items, load_input, get_item_count
@@ -14,14 +15,18 @@ def main(args: list[str] = None) -> int:
     digit_list = load_digits()
     item_list = load_items()
 
-    item_dict = {}
-    for id, item in item_list:
-        for input_ in input_list:
-            count = get_item_count(input_, item, digit_list, id)
-            if count > item_dict.get(id, 0):
+    item_dict: dict[str, int] = {}
+    with concurrent.futures.ProcessPoolExecutor() as pool:
+        task_list = [
+            pool.submit(find_item_count, input_list, digit_list, id, item)
+            for id, item in item_list
+        ]
+        for task in concurrent.futures.as_completed(task_list):
+            try:
+                id, count = task.result()
                 item_dict[id] = count
-                print(id, count)
-                break
+            except Exception as e:
+                print(id, e)
     script = generate_script(item_dict)
 
     with open(kwargs.output_file, 'w') as fout:
@@ -38,3 +43,13 @@ def parse_args(args: list[str]) -> argparse.Namespace:
 
     kwargs = parser.parse_args(args)
     return kwargs
+
+
+def find_item_count(input_list, digit_list, id, item) -> tuple[str, int]:
+    rv: int = 0
+    for input_ in input_list:
+        count = get_item_count(input_, item, digit_list, id)
+        if count > rv:
+            rv = count
+            break
+    return id, rv
