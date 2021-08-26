@@ -80,8 +80,8 @@ def get_digit(grid, digit_list, id, idx):
             continue
         best_score = max_value
         best_number = number
-        # if best_score > 0.75:
-        #     break
+        if best_score > 0.75:
+            break
     if best_score > 0.4:
         return best_number
     return -1
