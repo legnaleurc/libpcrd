@@ -1,9 +1,16 @@
+import argparse
+import sys
+
 from .ocr import load_digits, load_items, load_input, get_item_count
 from .output import generate_script
 
 
-def main():
-    input_list = load_input()
+def main(args: list[str] = None) -> int:
+    if args is None:
+        args = sys.argv
+    kwargs = parse_args(args[1:])
+
+    input_list = load_input(kwargs.input_folder)
     digit_list = load_digits()
     item_list = load_items()
 
@@ -21,3 +28,12 @@ def main():
         fout.write(script)
 
     return 0
+
+
+def parse_args(args: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser('pcrd')
+
+    parser.add_argument('input_folder', type=str, default='./input')
+
+    kwargs = parser.parse_args(args)
+    return kwargs

@@ -8,17 +8,18 @@ import numpy
 
 
 METHOD = cv2.TM_CCOEFF_NORMED
+ITEM_SIZE = (160, 160)
 
 
-def load_input():
-    path_list = os.listdir('./input')
-    return [cv2.imread('./input/' + path) for path in path_list]
+def load_input(input_path: str):
+    path_list = os.listdir(input_path)
+    return [cv2.imread(f'{input_path}/{path}') for path in path_list]
 
 
 def load_digits():
     path_list = os.listdir('./digits')
     return [
-        (int(re.match(r'(-?\d)\.png', path).group(1)), cv2.imread('./digits/' + path, cv2.IMREAD_GRAYSCALE))
+        (get_digit_from_path(path), load_digit('./digits/' + path))
         for path in path_list
     ]
 
@@ -26,9 +27,33 @@ def load_digits():
 def load_items():
     path_list = os.listdir('./items')
     return [
-        (re.match(r'icon_equipment_(\d+)\.png', path).group(1), cv2.imread('./items/' + path))
+        (get_item_id_from_path(path), load_item('./items/' + path))
         for path in path_list
     ]
+
+
+def load_item(path: str) -> numpy.ndarray:
+    rv = cv2.imread(path)
+    rv = cv2.resize(rv, ITEM_SIZE, cv2.INTER_AREA)
+    return rv
+
+
+def get_item_id_from_path(path: str) -> str:
+    rv = re.match(r'icon_equipment_(\d+)\.png', path)
+    if not rv:
+        return ''
+    return rv.group(1)
+
+
+def get_digit_from_path(path: str) -> int:
+    rv = re.match(r'(-?\d)\.png', path)
+    if not rv:
+        return -1
+    return int(rv.group(1))
+
+
+def load_digit(path: str) -> numpy.ndarray:
+    return cv2.imread(path, cv2.IMREAD_GRAYSCALE)
 
 
 def get_item_count(source, item, digit_list, id):
