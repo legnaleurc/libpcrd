@@ -1,20 +1,25 @@
 SHELL = '''
 (() => {{
-    function updateCount (id, count) {{
-        const input = document.querySelector(`.itemBox > img[src$="${{id}}.png"] + input`);
-        input.value = count;
-        input.dispatchEvent(new Event('input'));
+    const itemDict = {{
+        {script}
+    }};
+    const itemList = JSON.parse(localStorage.itemList);
+    for (const item of itemList) {{
+        const eid = item.equipment_id;
+        if (typeof itemDict[eid] !== 'undefined') {{
+            item.count = itemDict[eid];
+        }}
     }}
-    {script}
+    localStorage.itemList = JSON.stringify(itemList);
 }})();
 '''
 
 ITEM = '''
-updateCount({id}, {count});
+'{id}': {count},
 '''
 
 
-def generate_script(item_dict):
+def generate_script(item_dict: dict[int, int]) -> str:
     call_list = []
     for id, count in item_dict.items():
         call_list.append(ITEM.format(id=id, count=count))
