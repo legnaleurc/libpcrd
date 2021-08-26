@@ -18,7 +18,7 @@ def load_input():
 def load_digits():
     path_list = os.listdir('./digits')
     return [
-        (int(re.match(r'(\d)\.png', path).group(1)), cv2.imread('./digits/' + path, cv2.IMREAD_GRAYSCALE))
+        (int(re.match(r'(-?\d)\.png', path).group(1)), cv2.imread('./digits/' + path, cv2.IMREAD_GRAYSCALE))
         for path in path_list
     ]
 
@@ -59,8 +59,9 @@ def get_item_count(source, item, digit_list, id):
     total = 0
     for idx, grid in enumerate(grid_list):
         rv = get_digit(grid, digit_list, id, idx)
-        if rv >= 0:
-            total += rv * 10 ** idx
+        if rv < 0:
+            break
+        total += rv * 10 ** idx
 
     # display = cv2.cvtColor(display, cv2.COLOR_HSV2BGR)
     # cv2.imwrite(f'/mnt/d/local/tmp/output/{total}_{id}.png', display)
@@ -79,6 +80,8 @@ def get_digit(grid, digit_list, id, idx):
             continue
         best_score = max_value
         best_number = number
+        # if best_score > 0.75:
+        #     break
     if best_score > 0.4:
         return best_number
     return -1
