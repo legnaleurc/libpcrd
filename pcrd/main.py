@@ -25,6 +25,7 @@ def main(args: list[str] = None) -> int:
             try:
                 id, count = task.result()
                 item_dict[id] = count
+                print(id, count)
             except Exception as e:
                 print(id, e)
     script = generate_script(item_dict)
