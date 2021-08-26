@@ -2,6 +2,7 @@ import argparse
 import concurrent.futures
 import sys
 
+from .input import grab_input
 from .ocr import load_digits, load_items, load_input, get_item_count
 from .output import generate_script
 
@@ -10,6 +11,7 @@ def main(args: list[str] = None) -> int:
     if args is None:
         args = sys.argv
     kwargs = parse_args(args[1:])
+    grab_input(kwargs.input_folder)
 
     input_list = load_input(kwargs.input_folder)
     digit_list = load_digits()
