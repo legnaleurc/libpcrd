@@ -18,14 +18,12 @@ def swipe(x1: int, y1: int, x2: int, y2: int, duration: int) -> None:
     subprocess.call(f'adb shell input swipe {x1} {y1} {x2} {y2} {duration}')
 
 
-def get_coordinates(img: numpy.ndarray) -> tuple:
-    (y, x, _) = img.shape
-    return x // 2, 3 * y // 4, x // 2, y // 3.5
+def get_coordinates(h: int, w: int) -> tuple:
+    return w // 2, 3 * h // 4, w // 2, h // 3.5
 
 
-def get_bottom_point(img: numpy.ndarray) -> tuple:
-    (y, x, _) = img.shape
-    return 749 * y // 900, 977 * x // 1600
+def get_bottom_point(h: int, w: int) -> tuple:
+    return 749 * h // 900, 977 * w // 1600
 
 
 def get_color_diff(a: tuple, b: tuple) -> int:
@@ -43,8 +41,9 @@ def grab_input(input_folder: str):
     while True:
         img = grab_screenshot()
         if not coordinates:
-            coordinates = get_coordinates(img)
-            scroll_bar_bottom_point = get_bottom_point(img)
+            h, w, _ = img.shape
+            coordinates = get_coordinates(h, w)
+            scroll_bar_bottom_point = get_bottom_point(h, w)
         cv2.imwrite(f'{input_folder}/{idx}.png', img)
         if get_color_diff(img[scroll_bar_bottom_point], (191, 123, 88)) < 200:
             break

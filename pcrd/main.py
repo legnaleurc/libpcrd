@@ -11,7 +11,8 @@ def main(args: list[str] = None) -> int:
     if args is None:
         args = sys.argv
     kwargs = parse_args(args[1:])
-    grab_input(kwargs.input_folder)
+    if not kwargs.is_input_exist:
+        grab_input(kwargs.input_folder)
 
     input_list = load_input(kwargs.input_folder)
     digit_list = load_digits()
@@ -43,6 +44,7 @@ def parse_args(args: list[str]) -> argparse.Namespace:
 
     parser.add_argument('input_folder', type=str, default='./input')
     parser.add_argument('output_file', type=str, default='./output.js')
+    parser.add_argument('is_input_exist', type=int, default=0)
 
     kwargs = parser.parse_args(args)
     return kwargs
