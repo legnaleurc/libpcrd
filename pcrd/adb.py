@@ -24,7 +24,7 @@ def get_bottom_point(h: int, w: int) -> tuple[int, int]:
     return 749 * h // 900, 977 * w // 1600
 
 
-def get_color_diff(a: tuple, b: tuple) -> int:
+def get_color_diff(a: tuple[int, int, int], b: tuple[int, int, int]) -> int:
     ret = 0
     power = [2, 4, 3]
     for i in range(3):
