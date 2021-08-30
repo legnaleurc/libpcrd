@@ -5,7 +5,7 @@ import os.path
 import sys
 
 from .adb import grab_input
-from .ocr import load_digits, load_items, load_input, get_item_count
+from .ocr import BitMap, DigitList, load_digits, load_items, load_input, get_item_count
 from .output import generate_script
 
 
@@ -86,7 +86,7 @@ def add_bool_argument(
     parser.add_argument(neg_flag, dest=name, action='store_false', default=neg_default, help=no_help)
 
 
-def find_item_count(input_list, id, item, digit_list) -> tuple[str, int]:
+def find_item_count(input_list: list[BitMap], id: str, item: BitMap, digit_list: DigitList) -> tuple[str, int]:
     rv: int = 0
     for input_ in input_list:
         count = get_item_count(input_, item, digit_list)
