@@ -48,7 +48,7 @@ def parse_args(args: list[str]) -> argparse.Namespace:
     parser.add_argument('output_file', type=str, help='file name of JS output (e.g. ./output.js)')
     add_bool_argument(parser, 'auto_screen_shot', 'A',
         default=True,
-        yes_help='enable auto screen shot (need adb)',
+        yes_help='enable auto screen shot (need adb) (default: enable)',
         no_help='disable auto screen shot',
     )
     parser.add_argument('--adb-path', type=str, action='store', default='adb')

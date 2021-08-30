@@ -17,7 +17,7 @@ def swipe(adb_path: str, x1: int, y1: int, x2: int, y2: int, duration: int) -> N
 
 
 def get_coordinates(h: int, w: int) -> tuple[int, int, int, int]:
-    return w // 2, 3 * h // 4, w // 2, h // 3.5
+    return w // 2, 3 * h // 4, w // 2, int(h // 3.5)
 
 
 def get_bottom_point(h: int, w: int) -> tuple[int, int]:
@@ -32,7 +32,7 @@ def get_color_diff(a: tuple, b: tuple) -> int:
     return ret
 
 
-def is_scroll_to_botoom(scroll_bar_color: tuple[int, int, int]) -> bool:
+def scrolled_to_bottom(scroll_bar_color: tuple[int, int, int]) -> bool:
     SCROLL_BAR_COLOR = (191, 123, 88)
     return get_color_diff(scroll_bar_color, SCROLL_BAR_COLOR) < 200
 
@@ -48,7 +48,7 @@ def grab_input(input_folder: str, adb_path: str) -> None:
             coordinates = get_coordinates(h, w)
             scroll_bar_bottom_point = get_bottom_point(h, w)
         cv2.imwrite(f'{input_folder}/{idx}.png', img)
-        if is_scroll_to_botoom(img[scroll_bar_bottom_point]):
+        if scrolled_to_bottom(img[scroll_bar_bottom_point]):
             break
         swipe(adb_path, *coordinates, 500)
         time.sleep(0.5)
