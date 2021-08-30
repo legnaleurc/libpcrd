@@ -59,7 +59,7 @@ def load_digit(path: str) -> numpy.ndarray:
     return cv2.imread(path, cv2.IMREAD_GRAYSCALE)
 
 
-def get_item_count(source: numpy.ndarray, item: numpy.ndarray, digit_list: DigitList, id: str) -> int:
+def get_item_count(source: numpy.ndarray, item: numpy.ndarray, digit_list: DigitList) -> int:
     # match item
     rv = cv2.matchTemplate(source, item, METHOD)
     _min_value, max_value, _min_loc, max_loc = cv2.minMaxLoc(rv, None)
@@ -89,24 +89,20 @@ def get_item_count(source: numpy.ndarray, item: numpy.ndarray, digit_list: Digit
     # convert to digits
     total: int = 0
     for idx, grid in enumerate(grid_list):
-        rv = get_digit(grid, digit_list, id, idx)
+        rv = get_digit(grid, digit_list)
         if rv < 0:
             break
         total += rv * 10 ** idx
 
-    # display = cv2.cvtColor(display, cv2.COLOR_HSV2BGR)
-    # cv2.imwrite(f'/mnt/d/local/tmp/output/{total}_{id}.png', display)
-
     return total
 
 
-def get_digit(grid: numpy.ndarray, digit_list: DigitList, id: str, idx: int) -> int:
+def get_digit(grid: numpy.ndarray, digit_list: DigitList) -> int:
     best_score = 0
     best_number = -1
     for number, digit in digit_list:
         rv = cv2.matchTemplate(grid, digit, METHOD)
         _min_value, max_value, _min_loc, _max_loc = cv2.minMaxLoc(rv, None)
-        # print(id, idx, number, max_value, best_score)
         if max_value < best_score:
             continue
         best_score = max_value

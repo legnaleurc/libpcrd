@@ -23,7 +23,7 @@ def main(args: list[str] = None) -> int:
     item_dict: dict[str, int] = {}
     with concurrent.futures.ProcessPoolExecutor() as pool:
         task_list = [
-            pool.submit(find_item_count, input_list, digit_list, id, item)
+            pool.submit(find_item_count, input_list, id, item, digit_list)
             for id, item in item_list
         ]
         for task in concurrent.futures.as_completed(task_list):
@@ -86,10 +86,10 @@ def add_bool_argument(
     parser.add_argument(neg_flag, dest=name, action='store_false', default=neg_default, help=no_help)
 
 
-def find_item_count(input_list, digit_list, id, item) -> tuple[str, int]:
+def find_item_count(input_list, id, item, digit_list) -> tuple[str, int]:
     rv: int = 0
     for input_ in input_list:
-        count = get_item_count(input_, item, digit_list, id)
+        count = get_item_count(input_, item, digit_list)
         if count > rv:
             rv = count
             break
