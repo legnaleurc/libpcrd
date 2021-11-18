@@ -1,7 +1,7 @@
 import argparse
 import concurrent.futures
-import os
-import os.path
+import pathlib
+import shutil
 import sys
 
 from .adb import grab_input
@@ -59,11 +59,10 @@ def parse_args(args: list[str]) -> argparse.Namespace:
 
 
 def check_args(kwargs: argparse.Namespace):
-    if not os.path.isdir(kwargs.input_folder):
-        raise argparse.ArgumentError(None, f'input folder {kwargs.input_folder} not found')
-    if kwargs.auto_screen_shot:
-        if os.listdir(kwargs.input_folder):
-            raise argparse.ArgumentError(None, f'input folder {kwargs.input_folder} is not empty')
+    input_folder = pathlib.Path(kwargs.input_folder)
+    if input_folder.exists():
+        shutil.rmtree(input_folder)
+    input_folder.mkdir(parents=True)
 
 
 def add_bool_argument(
