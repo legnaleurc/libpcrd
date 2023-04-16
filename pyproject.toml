@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "libpcrd"
+version = "0.1.0"
+description = ""
+authors = ["Wei-Cheng Pan <legnaleurc@gmail.com>", "Sean Chen <genius091612@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+opencv-python = "^4.5.3.56"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
