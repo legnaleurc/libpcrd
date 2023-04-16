@@ -1,4 +1,4 @@
-SHELL = '''
+SHELL = """
 (() => {{
     const itemDict = {{
         {script}
@@ -12,15 +12,15 @@ SHELL = '''
     }}
     localStorage.itemList = JSON.stringify(itemList);
 }})();
-'''
+"""
 
-ITEM = '''
+ITEM = """
 '{id}': {count},
-'''
+"""
 
 
 def generate_script(item_dict: dict[int, int]) -> str:
     call_list = []
     for id, count in item_dict.items():
         call_list.append(ITEM.format(id=id, count=count))
-    return SHELL.format(script=''.join(call_list))
+    return SHELL.format(script="".join(call_list))

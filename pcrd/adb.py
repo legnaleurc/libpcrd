@@ -6,14 +6,21 @@ import numpy
 
 
 def grab_screenshot(adb_path: str) -> numpy.ndarray:
-    with subprocess.Popen(f'{adb_path} shell screencap -p', stdin=subprocess.PIPE, stdout=subprocess.PIPE, shell=True) as pipe:
-        image_bytes = pipe.stdout.read().replace(b'\r\n', b'\n')
+    with subprocess.Popen(
+        f"{adb_path} shell screencap -p",
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        shell=True,
+    ) as pipe:
+        image_bytes = pipe.stdout.read().replace(b"\r\n", b"\n")
     np_arr = numpy.frombuffer(image_bytes, numpy.uint8)
     return cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
 
 def swipe(adb_path: str, x1: int, y1: int, x2: int, y2: int, duration: int) -> None:
-    subprocess.call(f'{adb_path} shell input swipe {x1} {y1} {x2} {y2} {duration}', shell=True)
+    subprocess.call(
+        f"{adb_path} shell input swipe {x1} {y1} {x2} {y2} {duration}", shell=True
+    )
 
 
 def get_coordinates(h: int, w: int) -> tuple[int, int, int, int]:
@@ -47,7 +54,7 @@ def grab_input(input_folder: str, adb_path: str) -> None:
             h, w, _ = img.shape
             coordinates = get_coordinates(h, w)
             scroll_bar_bottom_point = get_bottom_point(h, w)
-        cv2.imwrite(f'{input_folder}/{idx}.png', img)
+        cv2.imwrite(f"{input_folder}/{idx}.png", img)
         if scrolled_to_bottom(img[scroll_bar_bottom_point]):
             break
         swipe(adb_path, *coordinates, 500)

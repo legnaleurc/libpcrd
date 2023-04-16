@@ -17,21 +17,21 @@ ITEM_SIZE = (160, 160)
 
 def load_input(input_path: str) -> list[BitMap]:
     path_list = os.listdir(input_path)
-    return [cv2.imread(f'{input_path}/{path}') for path in path_list]
+    return [cv2.imread(f"{input_path}/{path}") for path in path_list]
 
 
 def load_digits() -> DigitList:
-    path_list = os.listdir('./digits')
+    path_list = os.listdir("./digits")
     return [
-        (get_digit_from_path(path), load_digit('./digits/' + path))
+        (get_digit_from_path(path), load_digit("./digits/" + path))
         for path in path_list
     ]
 
 
 def load_items() -> list[tuple[str, BitMap]]:
-    path_list = os.listdir('./items')
+    path_list = os.listdir("./items")
     return [
-        (get_item_id_from_path(path), load_item('./items/' + path))
+        (get_item_id_from_path(path), load_item("./items/" + path))
         for path in path_list
     ]
 
@@ -43,14 +43,14 @@ def load_item(path: str) -> BitMap:
 
 
 def get_item_id_from_path(path: str) -> str:
-    rv = re.match(r'icon_equipment_(\d+)\.png', path)
+    rv = re.match(r"icon_equipment_(\d+)\.png", path)
     if not rv:
-        return ''
+        return ""
     return rv.group(1)
 
 
 def get_digit_from_path(path: str) -> int:
-    rv = re.match(r'(-?\d)\.png', path)
+    rv = re.match(r"(-?\d)\.png", path)
     if not rv:
         return -1
     return int(rv.group(1))
@@ -85,7 +85,7 @@ def get_item_count(source: BitMap, item: BitMap, digit_list: DigitList) -> int:
 
     # split digits
     _y, x, _ = display.shape
-    grid_list: list[BitMap] = [mask[:, x - 19 * (i + 1):x - 19 * i] for i in range(4)]
+    grid_list: list[BitMap] = [mask[:, x - 19 * (i + 1) : x - 19 * i] for i in range(4)]
 
     # convert to digits
     total: int = 0
@@ -93,7 +93,7 @@ def get_item_count(source: BitMap, item: BitMap, digit_list: DigitList) -> int:
         rv = get_digit(grid, digit_list)
         if rv < 0:
             break
-        total += rv * 10 ** idx
+        total += rv * 10**idx
 
     return total
 

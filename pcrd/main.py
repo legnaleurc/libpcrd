@@ -35,23 +35,32 @@ def main(args: list[str] = None) -> int:
                 print(id, e)
     script = generate_script(item_dict)
 
-    with open(kwargs.output_file, 'w') as fout:
+    with open(kwargs.output_file, "w") as fout:
         fout.write(script)
 
     return 0
 
 
 def parse_args(args: list[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser('pcrd')
+    parser = argparse.ArgumentParser("pcrd")
 
-    parser.add_argument('input_folder', type=str, help='folder contains item screen shots (e.g. ./input/)')
-    parser.add_argument('output_file', type=str, help='file name of JS output (e.g. ./output.js)')
-    add_bool_argument(parser, 'auto_screen_shot', 'A',
-        default=True,
-        yes_help='enable auto screen shot (need adb) (default: enable)',
-        no_help='disable auto screen shot',
+    parser.add_argument(
+        "input_folder",
+        type=str,
+        help="folder contains item screen shots (e.g. ./input/)",
     )
-    parser.add_argument('--adb-path', type=str, action='store', default='adb')
+    parser.add_argument(
+        "output_file", type=str, help="file name of JS output (e.g. ./output.js)"
+    )
+    add_bool_argument(
+        parser,
+        "auto_screen_shot",
+        "A",
+        default=True,
+        yes_help="enable auto screen shot (need adb) (default: enable)",
+        no_help="disable auto screen shot",
+    )
+    parser.add_argument("--adb-path", type=str, action="store", default="adb")
 
     kwargs = parser.parse_args(args)
     check_args(kwargs)
@@ -74,18 +83,24 @@ def add_bool_argument(
     yes_help: str = None,
     no_help: str = None,
 ) -> None:
-    flag = name.replace('_', '-')
-    pos_flags = ['--' + flag]
+    flag = name.replace("_", "-")
+    pos_flags = ["--" + flag]
     if short_name:
-        pos_flags.append('-' + short_name)
-    neg_flag = '--no-' + flag
+        pos_flags.append("-" + short_name)
+    neg_flag = "--no-" + flag
     pos_default = default
     neg_default = not default
-    parser.add_argument(*pos_flags, dest=name, action='store_true', default=pos_default, help=yes_help)
-    parser.add_argument(neg_flag, dest=name, action='store_false', default=neg_default, help=no_help)
+    parser.add_argument(
+        *pos_flags, dest=name, action="store_true", default=pos_default, help=yes_help
+    )
+    parser.add_argument(
+        neg_flag, dest=name, action="store_false", default=neg_default, help=no_help
+    )
 
 
-def find_item_count(input_list: list[BitMap], id: str, item: BitMap, digit_list: DigitList) -> tuple[str, int]:
+def find_item_count(
+    input_list: list[BitMap], id: str, item: BitMap, digit_list: DigitList
+) -> tuple[str, int]:
     rv: int = 0
     for input_ in input_list:
         count = get_item_count(input_, item, digit_list)
